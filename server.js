@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { createServer } from "https";
+import { createServer } from "http";
 import express from "express";
 import app from "./app.js";
 import connectToMongoDB from "./mongodb.js";

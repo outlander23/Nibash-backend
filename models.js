@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // Define the schema for the room
 const roomSchema = new mongoose.Schema({
@@ -12,7 +12,6 @@ const roomSchema = new mongoose.Schema({
   },
   mealsAccordingDate: [
     {
-      // float number
       type: Number,
       required: true,
     },
@@ -26,6 +25,7 @@ const roomSchema = new mongoose.Schema({
       givenTime: {
         type: Date,
         required: true,
+        default: Date.now,
       },
       amount: {
         type: Number,
@@ -33,23 +33,26 @@ const roomSchema = new mongoose.Schema({
       },
     },
   ],
-  totalAmount: {
+});
+
+const Room = mongoose.model("Room", roomSchema);
+
+// Define the schema for the ExtraCost
+const extraCostSchema = new mongoose.Schema({
+  description: {
+    type: String,
+    required: true,
+  },
+  amount: {
     type: Number,
-    default: 0, // Default value is 0
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 
-// Define a virtual property to count the number of one meals
-roomSchema.virtual("numberOfOneMeals").get(function () {
-  return this.mealsAccordingDate.filter((meal) => meal === 1).length;
-});
+const ExtraCost = mongoose.model("ExtraCost", extraCostSchema);
 
-// Define a virtual property to count the number of greater than one meals
-roomSchema.virtual("numberOfGreaterThanOneMeals").get(function () {
-  return this.mealsAccordingDate.filter((meal) => meal > 1).length;
-});
-
-// Create the Room model using the schema
-const Room = mongoose.model("Room", roomSchema);
-
-module.exports = { Room };
+export { Room, ExtraCost };
