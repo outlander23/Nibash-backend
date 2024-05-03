@@ -213,7 +213,7 @@ const tillCostRoom = async (req, res) => {
     for (const meal of room.mealsAccordingDate) {
       if (meal >= 1) {
         totalCost += 65; // Full meal cost
-      } else if (meal === 0.5) {
+      } else if (meal == 0.5) {
         totalCost += 40; // Half meal cost
       }
     }
@@ -313,9 +313,19 @@ const generateTable = async (req, res) => {
     // Iterate through each room
     for (const room of rooms) {
       // Calculate total payment for the room
+
+      let fullmeal = 0;
+      let halfmeal = 0;
+
       let totalPayment = 0;
+
       for (const taka of room.payTaka) {
         totalPayment += taka.amount;
+      }
+
+      for (const meal of room.mealsAccordingDate) {
+        if (meal >= 1) fullmeal += meal;
+        if (meal == 0.5) halfmeal++;
       }
 
       // Create an object containing room details and total payment
@@ -323,6 +333,8 @@ const generateTable = async (req, res) => {
         roomNumber: room.roomNumber,
         roomOwnerName: room.roomOwnerName,
         totalPayment: totalPayment,
+        fullmeal: fullmeal,
+        halfmeal,
       };
 
       // Add the room detail to the array
