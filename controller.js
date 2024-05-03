@@ -234,6 +234,19 @@ const tillCostRoom = async (req, res) => {
   }
 };
 
+const getAllExtras = async (req, res) => {
+  try {
+    // Fetch all extra costs from the database
+    const extras = await ExtraCost.find();
+
+    // Send the list of extra costs as response
+    return res.status(200).json(extras);
+  } catch (error) {
+    console.error("Error fetching extra costs:", error);
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
 // Function to calculate total cost for all rooms and extras
 const totalCost = async (req, res) => {
   try {
@@ -335,6 +348,7 @@ const generateTable = async (req, res) => {
         totalPayment: totalPayment,
         fullmeal: fullmeal,
         halfmeal,
+        roommeal: room.mealsAccordingDate,
       };
 
       // Add the room detail to the array
@@ -348,6 +362,33 @@ const generateTable = async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 };
+// Controller function to create an extra cost
+const createExtraCost = async (req, res) => {
+  try {
+    // Extract data from the request body
+    const { description, amount } = req.body;
+
+    // Validate input parameters
+    if (!description || !amount || typeof amount !== "number") {
+      return res.status(400).send("Invalid input parameters.");
+    }
+
+    // Create a new ExtraCost instance
+    const newExtraCost = new ExtraCost({
+      description,
+      amount,
+      date: new Date(), // Automatically set the current date
+    });
+
+    // Save the new extra cost to the database
+    await newExtraCost.save();
+
+    return res.status(201).send("Extra cost created successfully.");
+  } catch (error) {
+    console.error("Error creating extra cost:", error);
+    return res.status(500).send("Internal Server Error");
+  }
+};
 
 export {
   remain,
@@ -356,7 +397,9 @@ export {
   roomDetails,
   genTodayMeal,
   tillCostRoom,
+  getAllExtras,
   generateTable,
   updateRoomMeal,
+  createExtraCost,
   updateRoomOwnerName,
 };

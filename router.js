@@ -7,6 +7,8 @@ import {
   addAmount,
   roomDetails,
   generateTable,
+  getAllExtras,
+  createExtraCost,
 } from "./controller.js";
 
 const mealRouter = express.Router();
@@ -27,6 +29,8 @@ mealRouter.post("/update-room-owner", updateRoomOwnerName);
 mealRouter.get("/room-details/:roomNumber", roomDetails);
 
 mealRouter.get("/table", generateTable);
+mealRouter.get("/extra", getAllExtras);
+mealRouter.post("/extra", createExtraCost);
 
 // Endpoint to add amount
 mealRouter.post("/add-amount", addAmount);
