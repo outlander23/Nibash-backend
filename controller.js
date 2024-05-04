@@ -4,9 +4,9 @@ import { Room, ExtraCost } from "./models.js";
 const updateRoomMeal = async (req, res) => {
   console.log("Update");
 
+  console.log(req.body);
   try {
     const { roomNumber, currentDate, state } = req.body;
-
     // Validate input parameters
     if (
       !roomNumber ||
@@ -15,6 +15,9 @@ const updateRoomMeal = async (req, res) => {
     ) {
       return res.status(400).send("Invalid input parameters.");
     }
+
+    if (currentDate > 31 || currentDate <= 0)
+      return res.status(400).send("ki dicish ei gula ");
 
     const room = await Room.findOne({ roomNumber });
     if (!room) {
@@ -35,6 +38,7 @@ const updateRoomMeal = async (req, res) => {
 
 // Controller function to add amount
 const addAmount = async (req, res) => {
+  console.log(req.body);
   try {
     const { roomNumber, date, amount } = req.body;
 
